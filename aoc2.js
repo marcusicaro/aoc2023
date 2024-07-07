@@ -103,25 +103,22 @@ let games = input.split('\n');
 let maxCubes = {red: 12, green: 13, blue: 14};
 let idSum = 0;
 
-for(let game of games) {    
-    let currGameCubes = {red: 0, green: 0, blue: 0};
-    for(let color in currGameCubes) {
-        let invalidGame = false;
-        let regex = new RegExp("(\\d+)\\s" + color, "g"); // Added capturing group for the number
-
+for(let game of games) {
+    for(let color in maxCubes) {
+        let regex = new RegExp("(\\d+)\\s" + color, "g");
+        let breakOuterLoop = false;
         let match;
 
         while ((match = regex.exec(game)) !== null) {
-            currGameCubes[color] += parseInt(match[1]);
-            if(currGameCubes[color] > maxCubes[color]) {
-                invalidGame = true;
+            let currGameColorCount = parseInt(match[1]);
+            if(currGameColorCount > maxCubes[color]) {
+                breakOuterLoop = true;
                 break;
             }
         }
 
-        if(invalidGame) {
-            currGameCubes = {red: 0, green: 0, blue: 0};
-            break;
+        if(breakOuterLoop) {
+            break
         }
 
         if (color == 'blue') {
@@ -129,7 +126,6 @@ for(let game of games) {
             let gameNumberMatch = gameRegex.exec(game);
             let gameNumber = parseInt(gameNumberMatch[1]);
             idSum += gameNumber;
-            currGameCubes = {red: 0, green: 0, blue: 0};
         }
     }
 }
